@@ -1,0 +1,234 @@
+paths:
+  /api/carts:
+    post:
+      tags:
+        - Carts
+      summary: Create a new cart
+      responses:
+        '201':
+          description: Cart created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+      # Include a description of the required permissions
+      security:
+        - bearerAuth: ["USER", "ADMIN", "PREMIUM"]
+  /api/carts/{cid}:
+    get:
+      tags:
+        - Carts
+      summary: Get cart by ID
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID of the cart
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+      # Include a description of the required permissions
+      security:
+        - bearerAuth: ["USER", "ADMIN", "PREMIUM"]
+    put:
+      tags:
+        - Carts
+      summary: Update cart by ID
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID of the cart
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+      # Include a description of the required permissions
+      security:
+        - bearerAuth: ["USER", "ADMIN", "PREMIUM"]
+    delete:
+      tags:
+        - Carts
+      summary: Delete cart by ID
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID of the cart
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+      # Include a description of the required permissions
+      security:
+        - bearerAuth: ["USER", "ADMIN", "PREMIUM"]
+  /api/carts/{cid}/product/{pid}:
+    post:
+      tags:
+        - Carts
+      summary: Add product to cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID of the cart
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartProduct'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+      # Include a description of the required permissions
+      security:
+        - bearerAuth: ["USER", "PREMIUM"]
+    put:
+      tags:
+        - Carts
+      summary: Update product quantity in cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID of the cart
+          schema:
+            type: string
+        - name: pid
+          in: query
+          required: true
+          description: ID of the product to update
+          schema:
+            type: string
+        - name: quantity
+          in: query
+          required: true
+          description: New quantity of the product in the cart
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+      # Include a description of the required permissions
+      security:
+        - bearerAuth: ["USER", "ADMIN", "PREMIUM"]
+    delete:
+      tags:
+        - Carts
+      summary: Remove product from cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID of the cart
+          schema:
+            type: string
+        - name: pid
+          in: query
+          required: true
+          description: ID of the product to remove
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+      # Include a description of the required permissions
+      security:
+        - bearerAuth: ["USER", "PREMIUM"]
+  /api/carts/{cid}/purchase:
+    get:
+      tags:
+        - Carts
+      summary: Get purchase details for the cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID of the cart
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseDetails'
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Unique ID of the cart.
+        products:
+          type: array
+          description: List of products in the cart.
+          items:
+            $ref: '#/components/schemas/CartProduct'
+    CartProduct:
+      type: object
+      properties:
+        product:
+          type: string
+          description: ID of the product.
+        quantity:
+          type: integer
+          description: Quantity of the product in the cart.
+    PurchaseDetails:
+      type: object
+      properties:
+        total:
+          type: number
+          description: Total cost of the purchase.
+        items:
+          type: array
+          description: List of purchased items.
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                description: ID of the product.
+              quantity:
+                type: integer
+                description: Quantity of the product purchased.

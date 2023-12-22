@@ -1,0 +1,31 @@
+<div class="text-center py-5">
+  <h2 class="mb-3">Your payment has been processed successfully. Thank you for your purchase.!</h2>
+  <button class="btn btn-secondary fw-bold" onclick="generateTicket(`{{cartId}}`)">
+    Generate ticket</button>
+</div>
+
+<script>
+  const message = (message, color) => {
+    return Toastify({
+      text: `${message}`,
+      duration: 2000,
+      newWindow: true,
+      close: true,
+      gravity: "top",
+      position: "right",
+      stopOnFocus: true,
+      style: {
+        background: `${color}`,
+      },
+      onClick: function () { },
+    }).showToast();
+  }
+
+  const generateTicket = async (cartId) => {
+    try {
+      window.location.href = `/api/carts/${cartId}/purchase`;
+    } catch {
+      message(error, "#ff0000");
+    }
+  }
+</script>

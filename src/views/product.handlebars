@@ -1,0 +1,77 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand btn btn-secondary rounded-pill fw-bold text-white" href="/products">Products</a>
+    {{#if userPremium}}
+    <a class="navbar-brand btn btn-warning rounded-pill fw-bold" href="/products/realTimeProducts">RealTimeProducts</a>
+    {{/if}}
+    {{#if onlyUser}}
+    <a class="navbar-brand btn btn-warning rounded-pill fw-bold" href="/products/carts/{{user.cart}}">Cart</a>
+    {{/if}}
+
+    {{#if userAdmin}}
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarS"
+      aria-controls="navbarS" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarS">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="btn btn-warning rounded-pill fw-bold"
+            href="/products/realTimeProducts">RealTimeProducts</a>
+        </li>
+      </ul>
+      {{/if}}
+
+    </div>
+  </div>
+</nav>
+
+<div class="container my-5">
+  <div class="row">
+    <div class="col-md-4 offset-md-4">
+      <div class="card" style="border-radius: 15px;">
+        <div class="bg-image hover-overlay ripple ripple-surface ripple-surface-light" data-mdb-ripple-color="light">
+          <img src="/img/products/{{product.thumbnails.[0]}}" style="border-top-left-radius: 15px;
+              border-top-right-radius: 15px;" class="img-fluid" alt={{product.title}} />
+          <a href="#!">
+            <div class="mask"></div>
+          </a>
+        </div>
+        <div class="card-body pb-0">
+          <div class="d-flex justify-content-between">
+            <div>
+              <p class="text-dark">{{product.title}}</p>
+              <p class="small text-muted">{{product.description}}</p>
+            </div>
+            <div>
+              <div class="d-flex flex-row justify-content-end mt-1 mb-4 text-danger">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr class="my-0" />
+        <div class="card-body pb-0">
+          <div class="d-flex justify-content-between">
+            <p class="text-dark">${{product.price}}</p>
+            <p class="text-dark">{{product.code}}</p>
+          </div>
+          <p class="small text-muted">VISA Platinum</p>
+        </div>
+        <hr class="my-0" />
+        <div class="card-body">
+          <div class="d-flex justify-content-center align-items-center pb-2 mb-1">
+            <button type="button" class="btn btn-primary" {{#if userAdmin}}disabled{{/if}}
+              onclick="addProductToCart(`{{product._id}}`, `{{user.cart}}`)">Buy now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/products.js"></script>

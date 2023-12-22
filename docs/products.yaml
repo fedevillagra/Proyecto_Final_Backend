@@ -1,0 +1,146 @@
+paths:
+  /api/products:
+    get:
+      tags:
+        - Products
+      summary: Get all products
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+      # Include a description of the required permissions
+      security:
+        - bearerAuth: ["USER", "ADMIN", "PREMIUM"]
+    post:
+      tags:
+        - Products
+      summary: Create a new product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
+  /api/products/{pid}:
+    get:
+      tags:
+        - Products
+      summary: Get a product by ID
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ID of the product
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+      # Include a description of the required permissions
+      security:
+        - bearerAuth: ["USER", "ADMIN", "PREMIUM"]
+    put:
+      tags:
+        - Products
+      summary: Update a product by ID
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ID of the product
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+      # Include a description of the required permissions
+      security:
+        - bearerAuth: ["ADMIN", "PREMIUM"]
+    delete:
+      tags:
+        - Products
+      summary: Delete a product by ID
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ID of the product
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+      # Include a description of the required permissions
+      security:
+        - bearerAuth: ["ADMIN", "PREMIUM"]
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the product.
+        description:
+          type: string
+          description: Description of the product.
+        price:
+          type: number
+          description: Price of the product.
+        thumbnails:
+          type: array
+          items:
+            type: string
+          description: List of product thumbnails.
+        code:
+          type: string
+          description: Unique product code.
+        category:
+          type: string
+          description: Product category.
+        stock:
+          type: integer
+          description: Quantity in stock of the product.
+        status:
+          type: boolean
+          description: Product status (active/inactive).
+        owner:
+          type: string
+          description: ID of the product owner.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

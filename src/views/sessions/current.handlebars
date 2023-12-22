@@ -1,0 +1,174 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid px-4">
+    <a
+      class="navbar-brand btn btn-secondary rounded-pill fw-bold text-white"
+      href="/products"
+    >Products</a>
+  </div>
+</nav>
+<div class="container min-vh-100">
+  <div class="row">
+    <div class="col-md-4 offset-md-4 py-3 my-3">
+      <h1 class="text-center p-3 fw-bold">User Profile</h1>
+      <div class="card shadow">
+        <div class="px-4 py-2">
+          <span class="h2 text-center me-3">{{user.full_name}}</span>
+          {{#if user.profilePicture}}
+            <img
+              src="/img/profiles/{{user.profilePicture}}"
+              alt="{{user.first_name}}_{{user.last_name}}"
+              class="user-profile-img"
+            />
+          {{/if}}
+          <hr />
+        </div>
+        <div class="card-body px-4">
+          <p class="fs-5"><strong>UserID: </strong>{{user.id}}</p>
+          <p class="fs-5"><strong>Email: </strong>{{user.email}}</p>
+          <p class="fs-5"><strong>Role: </strong>{{user.role}}</p>
+          <hr />
+          {{#if isAdmin}}
+            <button
+              class="btn btn-secondary fw-bold p-2 my-1 d-block mx-auto"
+              onclick="deleteInactiveUsers()"
+            >Delete Inactive users</button>
+          {{/if}}
+        </div>
+      </div>
+
+      <div class="card shadow mt-3 p-3">
+        <!-- Formulario para cargar archivos -->
+        <form
+          enctype="multipart/form-data"
+          method="post"
+          action="/api/users/{{user.id}}/documents"
+        >
+          <div class="mb-3">
+            <label for="fileType" class="form-label">Tipo de archivo</label>
+            <select id="fileType" name="fileType" class="form-select">
+              <option value="profile">Profile Picture</option>
+              <option value="document">Document</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="file" class="form-label">Archivo</label>
+            <input
+              type="file"
+              class="form-control"
+              id="file"
+              name="files"
+              accept=".jpg, .jpeg, .png, .pdf"
+            />
+          </div>
+          <button
+            type="submit"
+            class="btn btn-outline-primary d-block mx-auto"
+          >Cargar Archivo</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    {{#if isAdmin}}
+    {{#each users}}
+    <div class="col-md-4">  
+      <div class="card shadow text-center my-1">
+        <p class="h4 pt-2">{{this.full_name}}</>
+        <hr>
+        <p class="h5 fw-bold">{{this.email}}</p>
+        <p class="h5 fw-bold">{{this.role}}</p>
+        <hr>
+      <div class="d-flex justify-content-around">
+        <button
+          class="btn btn-secondary fw-bold m-2"
+          onclick="changeRole(`{{this.id}}`)"
+        >Switch to user</button>
+        <button 
+        class="btn btn-danger fw-bold m-2"
+        onclick="deleteUser(`{{this.id}}`)"
+        >Delete user</button>
+      </div>
+      </div>
+    </div>
+    {{/each}}
+    {{/if}}
+  </div>
+</div>
+
+<script>
+  const message = (message, color) => {
+        return Toastify({
+          text: `${message}`,
+          duration: 2000,
+          newWindow: true,
+          close: true,
+          gravity: "top",
+          position: "right",
+          stopOnFocus: true,
+          style: {
+            background: `${color}`,
+          },
+          onClick: function () { },
+        }).showToast();
+      }
+
+  const changeRole = async (id) => {
+    try {
+      const res = await fetch(`/api/users/premium/${id}`, {
+        method: "POST",
+      });
+      if (res.ok) {
+        message("User role updated successfully", "#008000");
+        setTimeout(async () => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        message("Error updating user role", "#ff0000");
+      }
+    } catch (error) {
+      message(error, "#ff0000");
+    }
+  }
+
+  const deleteUser = async (id) => {
+    try {
+      const res = await fetch(`/api/users/${id}`, {
+        method: "DELETE",
+      });
+      if(res.ok) {
+      message("User is deleted successfully", "#008000");
+        setTimeout(async () => {
+            window.location.reload();
+          }, 2000);
+      } else {
+      message("Error deleted user role", "#ff0000");
+      }
+    } catch {
+      message(error, "#ff0000");
+    }
+  }
+
+  const deleteInactiveUsers = async () => {
+    try {
+      const res = await fetch(`/api/users/inactiveUsers`, {
+        method: "DELETE",
+      });
+      if(res.status === 200) {
+      message("Users is deleted successfully", "#008000");
+      } else {
+      message("No inactive users to clean up", "#006000");
+      }
+    } catch {
+      message(error, "#ff0000");
+    }
+  }
+
+</script>
+
+<style>
+  .user-profile-img {
+    width: 80px; 
+    height: 80px; 
+    border-radius: 50%; }
+</style>
