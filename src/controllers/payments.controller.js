@@ -29,10 +29,9 @@ export const createPaymentsController = async (req, res) => {
       line_items: lineItems,
       mode: "payment",
       // Cambiar las url para que funcionen de manera local
-      // success_url: `http://localhost:${PORT}/api/payments/success`,
-      // cancel_url: `http://localhost:${PORT}/api/payments/cancel`,
-      success_url: `${process.env.VERCEL_URL}/api/payments/success`,
-      cancel_url: `${process.env.VERCEL_URL}/api/payments/cancel`,
+       success_url: `http://localhost:${PORT}/api/payments/success`,
+       cancel_url: `http://localhost:${PORT}/api/payments/cancel`,
+
     });
     
     return res.redirect(sessions.url);
