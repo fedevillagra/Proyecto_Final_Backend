@@ -69,7 +69,7 @@ const run = (io, app) => {
   class router extends appRouter {
     init() {
       this.get("/", ["PUBLIC"], (req, res) => {
-        res.render("index", { name: "CoderHouse" });
+        res.render("index", { name: "Best Buy" });
       });
     }
   }

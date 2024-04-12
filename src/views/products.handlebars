@@ -40,7 +40,7 @@
 
 {{#if user}}
 <div class="p-3 m-1 border border-dark rounded-3 d-inline-block shadow">
-  <span class="h1 me-2">Welcome {{user.role}}: {{user.first_name}} {{user.last_name}} !</span> {{#if user.profilePicture}} <img src="/img/profiles/{{user.profilePicture}}" alt="{{user.first_name}}_{{user.last_name}}" class="user-profile-img"> {{/if}}
+  <span class="h1 me-2">Welcome {{user.role}}: {{user.first_name}} {{user.last_name}}!</span> {{#if user.profilePicture}} <img src="/img/profiles/{{user.profilePicture}}" alt="{{user.first_name}}_{{user.last_name}}" class="user-profile-img" style="object-fit: cover;"> {{/if}}
 </div>
 {{/if}}
 
