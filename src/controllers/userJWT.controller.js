@@ -54,8 +54,6 @@ export const viewLoginController = (req, res) => {
 export const loginGithubController = async (req, res) => {};
 
 export const githubCallbackController = async (req, res) => {
-  console.log("GitHub Callback URL hit");
-  console.log("Access Token:", req.authInfo.token);
   const access_token = req.authInfo.token;
   res
     .cookie(SIGNED_COOKIE_KEY, access_token, { signed: true })

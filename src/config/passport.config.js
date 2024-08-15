@@ -103,7 +103,7 @@ const initializePassport = () => {
       {
         clientID: JWT_CLIENT_ID,
         clientSecret: JWT_CLIENT_SECRET,
-        callbackURL: `${BASE_URL}/api/jwt/githubcallback/`,
+        callbackURL: `${BASE_URL}/sessions/githubcallback`,
       },
       async (accessTocken, refreshToken, profile, done) => {
         try {
