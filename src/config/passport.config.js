@@ -96,7 +96,6 @@ const initializePassport = () => {
       }
     )
   );
-
   passport.use(
     "github",
     new GithubStrategy(
@@ -107,10 +106,9 @@ const initializePassport = () => {
       },
       async (accessTocken, refreshToken, profile, done) => {
         try {
-          // devLogger.info(profile)
+          // devLogger.info(JSON.stringify(profile));
           const userName = profile.displayName || profile.username;
           const userEmail = profile._json.email;
-
           const existingUser = await UserService.findOne({ email: userEmail });
           if (existingUser) {
             // Si el usuario ya existe en la base de datos, generamos el token
@@ -145,7 +143,7 @@ const initializePassport = () => {
           return done(null, result, { token });
         } catch (error) {
           devLogger.error(error);
-          return done("Error getting user");
+          return done("Error getting user" + error);
         }
       }
     )
