@@ -13,6 +13,7 @@ import {
   ADMIN_PASSWORD,
   JWT_CLIENT_ID,
   JWT_CLIENT_SECRET,
+  KOYEB_URL
 } from "./config.js";
 import UserEmailDTO from "../dto/userEmail.dto.js";
 import { sendEmailRegister } from "../services/nodemailer/mailer.js";
@@ -102,7 +103,7 @@ const initializePassport = () => {
       {
         clientID: JWT_CLIENT_ID,
         clientSecret: JWT_CLIENT_SECRET,
-        callbackURL: "http://localhost:8080/api/jwt/githubcallback",
+        callbackURL: `${KOYEB_URL}/api/jwt/githubcallback`,
       },
       async (accessTocken, refreshToken, profile, done) => {
         try {
