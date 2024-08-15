@@ -63,6 +63,8 @@ const deleteProduct = async (id) => {
     // Mostrar notificación de éxito
     message("product delete to cart successfully", "top", "right", "#ff0000");
 
+    window.location.reload();
+
   } catch (error) {
     message(`${error}`, "bottom", "center", "#ff0000");
   }
