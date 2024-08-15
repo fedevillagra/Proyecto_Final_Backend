@@ -23,4 +23,4 @@ export const NODEMAILER_PASS = process.env.NODEMAILER_PASS;
 export const ENVIRONMENT = process.env.ENVIRONMENT;
 
 export const STRIPE_API_KEY = process.env.STRIPE_API_KEY;
-export const KOYEB_URL = process.env.KOYEB_URL;
+export const BASE_URL = process.env.BASE_URL;

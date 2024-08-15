@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import Mailgen from "mailgen";
-import { NODEMAILER_PASS, NODEMAILER_USER } from "../../config/config.js";
+import { NODEMAILER_PASS, NODEMAILER_USER, BASE_URL } from "../../config/config.js";
 import { devLogger } from "../../utils/logger.js";
 import moment from "moment";
 
@@ -19,7 +19,7 @@ export const sendEmailPurchase = async (userEmail, ticket) => {
     theme: "default",
     product: {
       name: "Ecommerce",
-      link: "http://localhost:8080",
+      link: BASE_URL,
     },
   });
 
@@ -88,7 +88,7 @@ export const sendEmailRegister = async (userEmail) => {
     theme: "default",
     product: {
       name: "Ecommerce",
-      link: "http://localhost:8080",
+      link: BASE_URL,
     },
   });
 
@@ -132,7 +132,7 @@ export const emailResetPassword = async (userEmail, tokenLink) => {
     theme: "default",
     product: {
       name: "Ecommerce",
-      link: "http://localhost:8080",
+      link: BASE_URL,
     },
   });
 
@@ -146,7 +146,7 @@ export const emailResetPassword = async (userEmail, tokenLink) => {
         button: {
           color: "#DC4D2F",
           text: "Reset your password",
-          link: `http://localhost:8080/api/jwt/passwordReset/${tokenLink}`,
+          link: `${BASE_URL}/api/jwt/passwordReset/${tokenLink}`,
         },
       },
       outro:
@@ -187,7 +187,7 @@ export const sendAccountDeletedEmail = async (userEmail) => {
     theme: "default",
     product: {
       name: "Ecommerce",
-      link: "http://localhost:8080",
+      link: BASE_URL,
     },
   });
 
@@ -233,7 +233,7 @@ export const sendingEmailDeletedProduct = async (user, product) => {
     theme: "default",
     product: {
       name: "Ecommerce",
-      link: "http://localhost:8080",
+      link: BASE_URL,
     },
   });
 

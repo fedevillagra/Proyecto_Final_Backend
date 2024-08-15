@@ -1,4 +1,4 @@
-import { PORT, STRIPE_API_KEY, KOYEB_URL } from "../config/config.js";
+import { PORT, STRIPE_API_KEY, BASE_URL } from "../config/config.js";
 import { CartService } from "../services/carts.service.js";
 import { devLogger } from "../utils/logger.js";
 import Stripe from "stripe";
@@ -31,8 +31,8 @@ export const createPaymentsController = async (req, res) => {
       // Cambiar las url para que funcionen de manera local
       // success_url: `http://localhost:${PORT}/api/payments/success`,
       // cancel_url: `http://localhost:${PORT}/api/payments/cancel`,
-      success_url: `${KOYEB_URL}/api/payments/success`,
-      cancel_url: `${KOYEB_URL}/api/payments/cancel`,
+      success_url: `${BASE_URL}/api/payments/success`,
+      cancel_url: `${BASE_URL}/api/payments/cancel`,
     });
     
     return res.redirect(sessions.url);
