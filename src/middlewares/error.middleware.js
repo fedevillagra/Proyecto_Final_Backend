@@ -1,8 +1,6 @@
 import EErrors from "../services/errors/enums.js";
-import { devLogger } from "../utils/logger.js";
 
 export default (error, req, res, next) => {
-  devLogger.error(err.stack);
   console.log(error.cause);
   switch (error.code) {
     case EErrors.INVALID_TYPES_ERROR:

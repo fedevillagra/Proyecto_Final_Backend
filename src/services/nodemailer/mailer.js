@@ -68,7 +68,7 @@ export const sendEmailPurchase = async (userEmail, ticket) => {
     const email = await transporter.sendMail(message);
     return email;
   } catch (error) {
-    devLogger.error(error);
+    devLogger.error('Error sending email:', {error: error.message,stack: error.stack,message: message,});
     throw error;
   }
 };
@@ -113,7 +113,7 @@ export const sendEmailRegister = async (userEmail) => {
     const email = await transporter.sendMail(message);
     return email;
   } catch (error) {
-    devLogger.error(error);
+    devLogger.error('Error sending registration email:', {error: error.message,stack: error.stack,message: message,});
     throw error;
   }
 };
@@ -139,8 +139,7 @@ export const emailResetPassword = async (userEmail, tokenLink) => {
   let content = {
     body: {
       name: `${userEmail.full_name}`,
-      intro:
-        "You have received this email because a password reset request for your account was received.",
+      intro: "You have received this email because a password reset request for your account was received.",
       action: {
         instructions: "Click the button below to reset your password:",
         button: {
@@ -149,8 +148,7 @@ export const emailResetPassword = async (userEmail, tokenLink) => {
           link: `${BASE_URL}/api/jwt/passwordReset/${tokenLink}`,
         },
       },
-      outro:
-        "If you did not request a password reset, no further action is required on your part.",
+      outro: "If you did not request a password reset, no further action is required on your part.",
       signature: false,
     },
   };
@@ -167,7 +165,7 @@ export const emailResetPassword = async (userEmail, tokenLink) => {
     const email = await transporter.sendMail(message);
     return email;
   } catch (error) {
-    devLogger.error(error);
+    devLogger.error('Error sending email:', {error: error.message,stack: error.stack,message: message,});
     throw error;
   }
 };
@@ -213,7 +211,7 @@ export const sendAccountDeletedEmail = async (userEmail) => {
     const email = await transporter.sendMail(message);
     return email;
   } catch (error) {
-    devLogger.error(error);
+    devLogger.error('Error sending email:', {error: error.message,stack: error.stack,message: message,});
     throw error;
   }
 };
@@ -259,7 +257,56 @@ export const sendingEmailDeletedProduct = async (user, product) => {
     const email = await transporter.sendMail(message);
     return email;
   } catch (error) {
-    devLogger.error(error);
+    devLogger.error('Error sending email:', {error: error.message,stack: error.stack,message: message,});
+    throw error;
+  }
+};
+
+export const testEmail = async (userEmail) => {
+  let config = {
+    service: "gmail",
+    auth: {
+      user: NODEMAILER_USER,
+      pass: NODEMAILER_PASS,
+    },
+  };
+
+  let transporter = nodemailer.createTransport(config);
+
+  let Mailgenerator = new Mailgen({
+    theme: "default",
+    product: {
+      name: "Ecommerce",
+      link: BASE_URL,
+    },
+  });
+
+  let content = {
+    body: {
+      name: `${userEmail.full_name}`,
+      intro: "This is a test email.",
+      signature: false,
+    },
+  };
+
+  let mail = Mailgenerator.generate(content);
+
+  let message = {
+    from: NODEMAILER_USER,
+    to: userEmail.email,
+    subject: "Test Email",
+    html: mail,
+  };
+
+  try {
+    const email = await transporter.sendMail(message);
+    return email;
+  } catch (error) {
+    devLogger.error('Error sending test email:', {
+      error: error.message,
+      stack: error.stack,
+      message: message,
+    });
     throw error;
   }
 };

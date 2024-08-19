@@ -12,7 +12,7 @@ export default class appRouter {
   getRouter() {
     return this.router;
   }
-  init() {} // Esta inicializacion sera para sus clases heredadas
+  init() {this.get('/test-email', [], this.testEmailHandler);} // Esta inicializacion sera para sus clases heredadas
 
   get(path, policies, ...callbacks) {
     this.router.get(
@@ -105,4 +105,15 @@ export default class appRouter {
     req.user = user;
     next();
   };
+  // Handler para la prueba de correo electrónico
+  testEmailHandler = async (req, res) => {
+    try {
+      const userEmail = { full_name: 'Test User', email: 'testuser@example.com' }; // Cambia esto a un correo válido
+      await testEmail(userEmail);
+      res.sendSuccess('Test email sent successfully');
+    } catch (error) {
+      devLogger.error('Failed to send test email', error);
+      res.sendServerError('Failed to send test email');
+    }
+  }
 }
