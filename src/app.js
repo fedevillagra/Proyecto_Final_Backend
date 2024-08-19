@@ -56,7 +56,7 @@ try {
   const serverHttp = app.listen(
     PORT,
     () => console.log(__dirname),
-    devLogger.http(`Server listening on port http://localhost:${PORT}`)
+    devLogger.http(`Server listening on port ${PORT}`)
   );
   // Crear una instancia de Socket.IO y vincularla al servidor HTTP
   const io = new Server(serverHttp);
