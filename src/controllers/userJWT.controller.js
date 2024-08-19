@@ -16,10 +16,15 @@ export const userRegisterController = async (req, res) => {
   // Filtro solo los datos necesarios para enviar por mail
   try {
     const userEmail = new UserEmailDTO(req.user);
+    console.log('User data on registration:', req.user);
     // Creo el email de bienvenida con los datos devueltos por dto
     await sendEmailRegister(userEmail);
+    console.log("Sending registration email to:", userEmail);
+    devLogger.debug(`User data: ${JSON.stringify(req.user)}`);
+    devLogger.debug(`UserEmailDTO data: ${JSON.stringify(userEmail)}`);
     return res.redirect("/api/jwt/login");
   } catch (error) {
+    console.error('Error during user registration:', error.message);
     devLogger.error(`Failed to register user: ${error.message}`, { error });
     res.status(500).json({ error: { message: "Failed to register user", details: error.message } });
   }
