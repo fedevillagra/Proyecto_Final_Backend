@@ -20,8 +20,8 @@ export const userRegisterController = async (req, res) => {
     await sendEmailRegister(userEmail);
     return res.redirect("/api/jwt/login");
   } catch (error) {
-    devLogger.error(error);
-    return res.status(500).json({ error: "Failed to register user" });
+    devLogger.error(`Failed to register user: ${error.message}`, { error });
+    res.status(500).json({ error: { message: "Failed to register user", details: error.message } });
   }
 };
 

@@ -27,7 +27,7 @@ const createLogger = (env) => {
       levels: customLevelsOptions.levels,
       transports: [
         new winston.transports.Console({
-          level: "info",
+          level: "debug", 
           format: winston.format.combine(
             winston.format.timestamp({
               format: moment().format("DD/MM/YYYY HH:mm:ss"),
