@@ -16,8 +16,6 @@ export const userRegisterController = async (req, res) => {
   // Filtro solo los datos necesarios para enviar por mail
   try {
     const userEmail = new UserEmailDTO(req.user);
-    console.log('User data on registration:', req.user);
-    console.log("Sending registration email to:", userEmail);
     // Creo el email de bienvenida con los datos devueltos por dto
     await sendEmailRegister(userEmail);
     return res.redirect("/api/jwt/login");
