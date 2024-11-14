@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import Mailgen from "mailgen";
-import { NODEMAILER_PASS, NODEMAILER_USER } from "../../config/config.js";
+import { NODEMAILER_PASS, NODEMAILER_USER, BASE_URL } from "../../config/config.js";
 import { devLogger } from "../../utils/logger.js";
 import moment from "moment";
 
@@ -145,7 +145,7 @@ export const emailResetPassword = async (userEmail, tokenLink) => {
         button: {
           color: "#DC4D2F",
           text: "Reset your password",
-          link: `${"http://localhost:8080"}/api/jwt/passwordReset/${tokenLink}`,
+          link: `${BASE_URL}/api/jwt/passwordReset/${tokenLink}`,
         },
       },
       outro: "If you did not request a password reset, no further action is required on your part.",
