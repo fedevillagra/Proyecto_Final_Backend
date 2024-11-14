@@ -14,58 +14,63 @@ import { devLogger } from "../utils/logger.js";
 
 export const userRegisterController = async (req, res) => {
   // Filtro solo los datos necesarios para enviar por mail
-  const userEmail = new UserEmailDTO(req.user);
-  // Creo el email de bienvenida con los datos devueltos por dto
-  await sendEmailRegister(userEmail);
-  res.redirect("/api/jwt/login");
+  try {
+    const userEmail = new UserEmailDTO(req.user);
+    // Creo el email de bienvenida con los datos devueltos por dto
+    await sendEmailRegister(userEmail);
+    return res.redirect("/api/jwt/login");
+  } catch (error) {
+    devLogger.error(`Failed to register user: ${error.message}`, { error });
+    res.status(500).json({ error: { message: "Failed to register user", details: error.message } });
+  }
 };
 
 export const failRegisterController = (req, res) => {
-  res.render("errors/errorPage", {
+  return res.render("errors/errorPage", {
     status: "error",
     error: "Failed Register!",
   });
 };
 
 export const viewRegisterController = (req, res) => {
-  res.render("sessions/register");
+  return res.render("sessions/register");
 };
 
 export const userLoginController = (req, res) => {
   // El usuario ha sido autenticado exitosamente
   const user = req.user;
   const access_token = generateToken(user);
-  res
+  return res
     .cookie(SIGNED_COOKIE_KEY, access_token, { signed: true })
     .redirect("/products");
 };
 
 export const failLoginController = (req, res) => {
-  res.render("errors/errorPage", {
+  return res.render("errors/errorPage", {
     status: "error",
     error: "Invalid Credentials",
   });
 };
 
 export const viewLoginController = (req, res) => {
-  res.render("sessions/login");
+  return res.render("sessions/login");
 };
 
 export const loginGithubController = async (req, res) => {};
 
 export const githubCallbackController = async (req, res) => {
   const access_token = req.authInfo.token;
-  res
+  return res
     .cookie(SIGNED_COOKIE_KEY, access_token, { signed: true })
     .redirect("/products");
 };
 
 export const userLogoutController = async (req, res) => {
   try {
-    res.clearCookie(SIGNED_COOKIE_KEY).redirect("/api/jwt/login");
+    return res.clearCookie(SIGNED_COOKIE_KEY).redirect("/api/jwt/login");
   } catch (error) {
     devLogger.error(error);
-    res.render("errors/errorPage", {
+    return res.render("errors/errorPage", {
       status: "error",
       error: "Error during logout",
     });
@@ -73,11 +78,11 @@ export const userLogoutController = async (req, res) => {
 };
 
 export const errorPageController = (req, res) => {
-  res.render("errors/errorPage");
+  return res.render("errors/errorPage");
 };
 
 export const errorResetPassController = (req, res) => {
-  res.render("errors/errorResetPass");
+  return res.render("errors/errorResetPass");
 };
 
 export const userCurrentController = async (req, res) => {
@@ -90,14 +95,18 @@ export const userCurrentController = async (req, res) => {
     const isAdmin = user.role === "admin" ? true : false;
     const isUser = user.role === "user" ? true : false;
     const isPremium = user.role === "premium" ? true : false;
-    res.render("sessions/current", { user, users, isUser, isPremium, isAdmin });
+    return res.render("sessions/current", { user, users, isUser, isPremium, isAdmin });
   } catch (error) {
     devLogger.error(error);
+    return res.status(500).render("errors/errorPage", {
+      status: "error",
+      error: "Error retrieving user data",
+    });
   }
 };
 
 export const passwordResetController = (req, res) => {
-  res.render("sessions/passwordResetEmail");
+  return res.render("sessions/passwordResetEmail");
 };
 export const passwordResetEmailController = async (req, res) => {
   try {
@@ -114,53 +123,76 @@ export const passwordResetEmailController = async (req, res) => {
     const token = linkToken(userEmail);
     await UserPasswordService.create({ email, token });
     await emailResetPassword(userEmail, token);
-    res.render("sessions/messageEmail", {
+    return res.render("sessions/messageEmail", {
       status: "success",
       message: `Email successfully send to ${email} in order to reset password`,
     });
   } catch (error) {
     devLogger.error(error);
+    return res.status(500).render("errors/errorPage", {
+      status: "error",
+      error: "Error sending reset email",
+    });
   }
 };
 
 export const changePasswordController = async (req, res) => {
-  const tid = req.params.tid;
-  const tokenId = await UserPasswordService.findOne({ token: tid });
+  try {
+    const tid = req.params.tid;
+    const tokenId = await UserPasswordService.findOne({ token: tid });
 
-  if (!tokenId) {
-    return res.render("errors/errorResetPass", {
+    if (!tokenId) {
+      return res.render("errors/errorResetPass", {
+        status: "error",
+        error: "Invalid token | token has expired",
+      });
+    }
+
+    return res.render("sessions/changePassword", { tid });
+  } catch (error) {
+    devLogger.error(error);
+    return res.status(500).render("errors/errorPage", {
       status: "error",
-      error: "invalid token | token has expired",
+      error: "Error processing password change",
     });
   }
-  res.render("sessions/changePassword", { tid });
 };
 
 export const sendNewPasswordController = async (req, res) => {
   try {
     const tid = req.params.tid;
+
     if (!tid) {
       return res.render("errors/errorResetPass", {
         status: "error",
-        error: "invalid token | token has expired",
+        error: "Invalid token | token has expired",
       });
     }
-    const userEmail = jwt.verify(tid, PRIVATE_KEY);
 
+    const userEmail = jwt.verify(tid, PRIVATE_KEY);
     const { password } = req.body;
-    const userFound = await UserService.findOne({
-      email: userEmail.data.email,
-    });
-    if (!userFound || isValidPassword(userFound, password)) {
+    const userFound = await UserService.findOne({ email: userEmail.data.email });
+
+    if (!userFound) {
       return res.render("errors/errorChangePass", {
         status: "error",
-        error: "Error updating password",
+        error: "Error updating password - user not found",
         tid,
       });
     }
-    const userUpdated = await UserService.update(userEmail.data._id, {
+    
+    if (isValidPassword(userFound, password)) {
+      return res.render("errors/errorChangePass", {
+        status: "error",
+        error: "New password is the same as the current one",
+        tid,
+      });
+    }
+
+    const userUpdated = await UserService.update(userEmail.data.id, {
       password: createHash(password),
     });
+
     if (!userUpdated) {
       return res.render("errors/errorChangePass", {
         status: "error",
@@ -168,11 +200,16 @@ export const sendNewPasswordController = async (req, res) => {
         tid,
       });
     }
-    res.render("sessions/messageEmail", {
+
+    return res.render("sessions/messageEmail", {
       status: "success",
       message: `Password successfully updated`,
     });
   } catch (error) {
     devLogger.error(error);
+    return res.status(500).render("errors/errorPage", {
+      status: "error",
+      error: "Error processing password change",
+    });
   }
 };
