@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import Mailgen from "mailgen";
-import { NODEMAILER_PASS, NODEMAILER_USER, BASE_URL } from "../../config/config.js";
+import { NODEMAILER_PASS, NODEMAILER_USER } from "../../config/config.js";
 import { devLogger } from "../../utils/logger.js";
 import moment from "moment";
 
