@@ -19,7 +19,7 @@ export const sendEmailPurchase = async (userEmail, ticket) => {
     theme: "default",
     product: {
       name: "Ecommerce",
-      link: BASE_URL,
+      link: "http://localhost:8080",
     },
   });
 
@@ -88,7 +88,7 @@ export const sendEmailRegister = async (userEmail) => {
     theme: "default",
     product: {
       name: "Ecommerce",
-      link: BASE_URL,
+      link: "http://localhost:8080",
     },
   });
 
@@ -132,7 +132,7 @@ export const emailResetPassword = async (userEmail, tokenLink) => {
     theme: "default",
     product: {
       name: "Ecommerce",
-      link: BASE_URL,
+      link: "http://localhost:8080",
     },
   });
 
@@ -145,7 +145,7 @@ export const emailResetPassword = async (userEmail, tokenLink) => {
         button: {
           color: "#DC4D2F",
           text: "Reset your password",
-          link: `${BASE_URL}/api/jwt/passwordReset/${tokenLink}`,
+          link: `${"http://localhost:8080"}/api/jwt/passwordReset/${tokenLink}`,
         },
       },
       outro: "If you did not request a password reset, no further action is required on your part.",
@@ -185,7 +185,7 @@ export const sendAccountDeletedEmail = async (userEmail) => {
     theme: "default",
     product: {
       name: "Ecommerce",
-      link: BASE_URL,
+      link: "http://localhost:8080",
     },
   });
 
@@ -231,7 +231,7 @@ export const sendingEmailDeletedProduct = async (user, product) => {
     theme: "default",
     product: {
       name: "Ecommerce",
-      link: BASE_URL,
+      link: "http://localhost:8080",
     },
   });
 
